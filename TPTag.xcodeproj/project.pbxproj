@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,6 +16,9 @@
 		FEFADBA52721636500DAEAFA /* TPTagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFADBA42721636500DAEAFA /* TPTagTests.swift */; };
 		FEFADBAF2721636600DAEAFA /* TPTagUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFADBAE2721636600DAEAFA /* TPTagUITests.swift */; };
 		FEFADBB12721636600DAEAFA /* TPTagUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFADBB02721636600DAEAFA /* TPTagUITestsLaunchTests.swift */; };
+		FEFADBC1272163B100DAEAFA /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFADBBE272163B000DAEAFA /* TagView.swift */; };
+		FEFADBC2272163B100DAEAFA /* TagFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFADBBF272163B000DAEAFA /* TagFlowLayout.swift */; };
+		FEFADBC3272163B100DAEAFA /* TagCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFADBC0272163B000DAEAFA /* TagCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +52,9 @@
 		FEFADBAA2721636600DAEAFA /* TPTagUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TPTagUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FEFADBAE2721636600DAEAFA /* TPTagUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPTagUITests.swift; sourceTree = "<group>"; };
 		FEFADBB02721636600DAEAFA /* TPTagUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TPTagUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		FEFADBBE272163B000DAEAFA /* TagView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
+		FEFADBBF272163B000DAEAFA /* TagFlowLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagFlowLayout.swift; sourceTree = "<group>"; };
+		FEFADBC0272163B000DAEAFA /* TagCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +105,7 @@
 		FEFADB8C2721636100DAEAFA /* TPTag */ = {
 			isa = PBXGroup;
 			children = (
+				FEFADBBD2721638C00DAEAFA /* Source */,
 				FEFADB8D2721636100DAEAFA /* AppDelegate.swift */,
 				FEFADB8F2721636100DAEAFA /* SceneDelegate.swift */,
 				FEFADB912721636100DAEAFA /* ViewController.swift */,
@@ -125,6 +132,16 @@
 				FEFADBB02721636600DAEAFA /* TPTagUITestsLaunchTests.swift */,
 			);
 			path = TPTagUITests;
+			sourceTree = "<group>";
+		};
+		FEFADBBD2721638C00DAEAFA /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				FEFADBC0272163B000DAEAFA /* TagCollectionViewCell.swift */,
+				FEFADBBF272163B000DAEAFA /* TagFlowLayout.swift */,
+				FEFADBBE272163B000DAEAFA /* TagView.swift */,
+			);
+			path = Source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,7 +224,7 @@
 				};
 			};
 			buildConfigurationList = FEFADB852721636100DAEAFA /* Build configuration list for PBXProject "TPTag" */;
-			compatibilityVersion = "Xcode 13.0";
+			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -259,8 +276,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				FEFADB922721636100DAEAFA /* ViewController.swift in Sources */,
+				FEFADBC2272163B100DAEAFA /* TagFlowLayout.swift in Sources */,
 				FEFADB8E2721636100DAEAFA /* AppDelegate.swift in Sources */,
+				FEFADBC3272163B100DAEAFA /* TagCollectionViewCell.swift in Sources */,
 				FEFADB902721636100DAEAFA /* SceneDelegate.swift in Sources */,
+				FEFADBC1272163B100DAEAFA /* TagView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

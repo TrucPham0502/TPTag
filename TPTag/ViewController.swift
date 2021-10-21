@@ -42,7 +42,7 @@ class ViewController: UIViewController {
     }
     @objc func buttonTap(_ sender : Any?) {
         print(self.tags.tagIndexSelecteds)
-        self.tags.toggleTagSelected(at: 4)
+        self.tags.addTag(tag: TagDefault(text: "button add"))
     }
 
 }

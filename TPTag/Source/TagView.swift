@@ -118,15 +118,16 @@ extension TagViewDelegate {
         tag.layer.cornerRadius = 18
         tag.layer.borderWidth = 2
         tag.layer.borderColor = UIColor.lightGray.cgColor
-        
-    }
-    func tagView(_ tagView : TagView, tagSeleted tag : TagCollectionViewCell, indexPath : IndexPath, data: TagModel, isSelected : Bool) {
         if isSelected {
             tag.backgroundColor = .yellow
         }
         else {
             tag.backgroundColor = .white
         }
+        
+    }
+    func tagView(_ tagView : TagView, tagSeleted tag : TagCollectionViewCell, indexPath : IndexPath, data: TagModel, isSelected : Bool) {
+        
     }
     func tagView(_ tagView : TagView, viewShouldResizeTo size : CGSize) {}
     func tagView(_ tagView : TagView, textAttribute indexPath : IndexPath , data: TagModel, isSelected : Bool) -> NSAttributedString {
@@ -279,6 +280,7 @@ class TagView: UIView {
     }
     
     func setup() {
+        if self.delegate == nil { self.delegate = self }
         self.clipsToBounds = true
         self.collectionView.removeFromSuperview()
         self.addSubview(self.collectionView)
@@ -508,7 +510,7 @@ extension TagView: UICollectionViewDelegateFlowLayout {
         return CGSize(width: calculatedWidth, height: calculatedHeight)
     }
 }
-
+extension TagView : TagViewDelegate {}
 protocol TagModel  {
     var id : String { get }
     var text: String { get }

@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 class TagCollectionViewCell: UICollectionViewCell {
-    static let lblFont : UIFont = .systemFont(ofSize: 14)
     static let cellIdentifier = "TagCollectionViewCell"
     var didSelected : (TagCollectionViewCell, Bool) -> () = {_,_ in }
     
@@ -39,7 +38,7 @@ class TagCollectionViewCell: UICollectionViewCell {
         lbl.numberOfLines = 1
         lbl.textColor = UIColor.black
         lbl.textAlignment = .center
-        lbl.font = TagCollectionViewCell.lblFont
+        lbl.font = .systemFont(ofSize: 14)
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
     }()

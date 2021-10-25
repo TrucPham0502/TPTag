@@ -14,6 +14,8 @@ class ViewController: UIViewController {
         tags.tagPadding = .init(top: 10, left: 10, bottom: 10, right: 10)
         tags.allowSelected = .single
         tags.translatesAutoresizingMaskIntoConstraints = false
+        tags.tagMaxSize = UIScreen.main.bounds.size
+        tags.tagNumberOfLines = -1
         return tags
     }()
     lazy var button : UIButton = {
@@ -48,5 +50,7 @@ class ViewController: UIViewController {
 }
 
 extension ViewController : TagViewDelegate {
-    
+    func tagView(_ tagView: TagView, font indexPath: IndexPath, data: TagModel, isSelected: Bool) -> UIFont {
+        return .systemFont(ofSize: 34)
+    }
 }

@@ -84,6 +84,17 @@ protocol TagViewDelegate: AnyObject {
      - Returns: trả về size.
      */
     func tagView(_ tagView : TagView, rightViewSize indexPath : IndexPath, data: TagModel, isSelected : Bool) -> CGSize
+    
+    /**
+     Font
+     - Parameters:
+         - tagView: Tag View
+         - indexPath: Vị trí Tag
+         - data: Data của tag
+         - isSelected: Tag có đang được chọn không
+     - Returns: trả về size.
+     */
+    func tagView(_ tagView : TagView, font indexPath : IndexPath, data: TagModel, isSelected : Bool) -> UIFont
 }
 
 extension TagViewDelegate {
@@ -119,7 +130,10 @@ extension TagViewDelegate {
     }
     func tagView(_ tagView : TagView, viewShouldResizeTo size : CGSize) {}
     func tagView(_ tagView : TagView, textAttribute indexPath : IndexPath , data: TagModel, isSelected : Bool) -> NSAttributedString {
-        return NSAttributedString(string: data.text, attributes: [.font : UIFont.systemFont(ofSize: 14), .foregroundColor : UIColor.black])
+        return NSAttributedString(string: data.text, attributes: [.font : self.tagView(tagView, font: indexPath, data: data, isSelected: isSelected), .foregroundColor : UIColor.black])
+    }
+    func tagView(_ tagView : TagView, font indexPath : IndexPath, data: TagModel, isSelected : Bool) -> UIFont {
+        return UIFont.systemFont(ofSize: 14)
     }
 }
 @IBDesignable
@@ -214,6 +228,17 @@ class TagView: UIView {
     var verticalTagSpacing: CGFloat = 5.0 {
         didSet {
             setup()
+        }
+    }
+    
+    
+    /**
+       text number line
+     */
+    @IBInspectable
+    var tagNumberOfLines: Int = 1 {
+        didSet {
+            reloadData()
         }
     }
     
@@ -415,6 +440,7 @@ extension TagView: UICollectionViewDelegate, UICollectionViewDataSource {
             cell.padding = self.tagPadding
             cell.wordLabel.text = tag.text
             if let delegate = self.delegate {
+                cell.wordLabel.numberOfLines = self.tagNumberOfLines
                 cell.wordLabel.attributedText = delegate.tagView(self, textAttribute: indexPath, data: tag, isSelected: isSelected)
                 if let leftView = delegate.tagView(self, leftView: indexPath, data: tag, isSelected: isSelected) {
                     let size = delegate.tagView(self, leftViewSize: indexPath, data: tag, isSelected: isSelected)
@@ -471,7 +497,7 @@ extension TagView: UICollectionViewDelegateFlowLayout {
         let maxWidth = self.tagMaxSize.width - self.containerPadding.left - self.containerPadding.right - self.tagPadding.left - self.tagPadding.right
         
         
-        let wordSize : CGSize = delegate?.tagView(self, textAttribute: indexPath, data: tag, isSelected: isSelected).StringSize(considering: maxWidth - rightViewSize.width - leftViewSize.width) ?? NSAttributedString(string: tag.text, attributes: [.font : TagCollectionViewCell.lblFont]).StringSize(considering: maxWidth)
+        let wordSize : CGSize = delegate?.tagView(self, textAttribute: indexPath, data: tag, isSelected: isSelected).StringSize(considering: maxWidth - rightViewSize.width - leftViewSize.width) ?? NSAttributedString(string: tag.text, attributes: [.font : self.delegate?.tagView(self, font: indexPath, data: tag, isSelected: isSelected) ?? .systemFont(ofSize: 14)]).StringSize(considering: maxWidth)
         
         var calculatedHeight = CGFloat()
         var calculatedWidth = CGFloat()

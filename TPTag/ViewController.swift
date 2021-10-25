@@ -9,13 +9,13 @@ import UIKit
 
 class ViewController: UIViewController {
     lazy var tags: TagView = {
-        let tags = TagView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 20, height: 70.0))
-        tags.delegate = self
-        tags.tagPadding = .init(top: 10, left: 10, bottom: 10, right: 10)
+        let tags = TagView()
+        tags.backgroundColor = .yellow
+//        tags.delegate = self
         tags.allowSelected = .single
-        tags.translatesAutoresizingMaskIntoConstraints = false
-        tags.tagMaxSize = UIScreen.main.bounds.size
         tags.tagNumberOfLines = -1
+        tags.containerPadding = .init(top: 20, left: 10, bottom: 20, right: 10)
+        tags.translatesAutoresizingMaskIntoConstraints = false
         return tags
     }()
     lazy var button : UIButton = {
@@ -35,11 +35,12 @@ class ViewController: UIViewController {
             tags.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             tags.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             tags.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            tags.widthAnchor.constraint(equalTo: self.view.widthAnchor),
 
             button.topAnchor.constraint(equalTo: self.tags.bottomAnchor),
             button.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
         ])
-        tags.addTags(tags: [TagDefault(text: "hasdad"),TagDefault(text: "hasdad"),TagDefault(text: "hasdad"),TagDefault(text: "hasdad"),TagDefault(text: "hasdad"),TagDefault(text: "hasdad"),TagDefault(text: "hasdad"),TagDefault(text: "cong hoa xa hoi chu nghia viet nam doc lap tu do hanh phuc")])
+        tags.addTags(tags: [TagDefault(text: "hasdad"),TagDefault(text: "cong hoa xa hoi chu nghia viet nam doc lap tu do hanh phuc cong hoa xa hoi chu nghia viet nam doc lap tu do hanh phuc cong hoa xa hoi chu nghia viet nam doc lap tu do hanh phuc cong hoa xa hoi chu nghia viet nam doc lap tu do hanh phuc cong hoa xa hoi chu nghia viet nam doc lap tu do hanh phuc phuc")])
         
     }
     @objc func buttonTap(_ sender : Any?) {

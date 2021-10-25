@@ -95,9 +95,24 @@ protocol TagViewDelegate: AnyObject {
      - Returns: trả về size.
      */
     func tagView(_ tagView : TagView, font indexPath : IndexPath, data: TagModel, isSelected : Bool) -> UIFont
+    
+    /**
+     Tag padding
+     - Parameters:
+         - tagView: Tag View
+         - indexPath: Vị trí Tag
+         - data: Data của tag
+         - isSelected: Tag có đang được chọn không
+     - Returns: trả về size.
+     */
+    func tagView(_ tagView : TagView, padding indexPath : IndexPath, data: TagModel, isSelected : Bool) -> UIEdgeInsets
 }
 
 extension TagViewDelegate {
+    func tagView(_ tagView : TagView, padding indexPath : IndexPath, data: TagModel, isSelected : Bool) -> UIEdgeInsets {
+        return isSelected ? .init(top: 6, left: 9, bottom: 6, right: 12) : .init(top: 6, left: 12, bottom: 6, right: 12)
+    }
+    
     func tagView(_ tagView : TagView, leftView indexPath : IndexPath, data: TagModel, isSelected : Bool) -> UIView? {
         let v = UIImageView(image: .init(named: ""))
         v.backgroundColor = .red
@@ -157,6 +172,7 @@ class TagView: UIView {
         let view = UICollectionView(frame: self.bounds, collectionViewLayout: layout)
         view.showsVerticalScrollIndicator = false
         view.showsHorizontalScrollIndicator = false
+        view.backgroundColor = .green
         view.delegate = self
         view.dataSource = self
         view.backgroundColor = UIColor.clear
@@ -198,17 +214,8 @@ class TagView: UIView {
     @IBInspectable
     var containerPadding : UIEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10) {
         didSet {
-            setup()
-        }
-    }
-    
-    /**
-        tag padding.
-     */
-    @IBInspectable
-    var tagPadding: UIEdgeInsets = .init(top: 6, left: 12, bottom: 6, right: 12) {
-        didSet {
-            self.collectionView.reloadData()
+            (self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionInset = containerPadding
+            self.reloadData()
         }
     }
     
@@ -218,7 +225,8 @@ class TagView: UIView {
     @IBInspectable
     var horizontalTagSpacing: CGFloat = 5.0 {
         didSet {
-            setup()
+            (self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.minimumLineSpacing = horizontalTagSpacing
+            self.reloadData()
         }
     }
     
@@ -228,7 +236,8 @@ class TagView: UIView {
     @IBInspectable
     var verticalTagSpacing: CGFloat = 5.0 {
         didSet {
-            setup()
+            (self.collectionView.collectionViewLayout as? UICollectionViewFlowLayout)?.minimumInteritemSpacing = self.verticalTagSpacing
+            self.reloadData()
         }
     }
     
@@ -265,18 +274,13 @@ class TagView: UIView {
     
     override var intrinsicContentSize: CGSize {
         self.layoutIfNeeded()
-        
-        var size = self.collectionView.collectionViewLayout.collectionViewContentSize
-        
-        size.width = size.width + self.containerPadding.left + self.containerPadding.right
-        size.height = size.height + self.containerPadding.top + self.containerPadding.bottom
-        
-        return size
+        return self.collectionView.collectionViewLayout.collectionViewContentSize
     }
     
     override  func layoutSubviews() {
         super.layoutSubviews()
-        collectionView.frame = .init(origin: .init(x: self.containerPadding.left, y: self.containerPadding.top), size: .init(width: self.bounds.width - self.containerPadding.left - self.containerPadding.right, height: self.bounds.height - self.containerPadding.top - self.containerPadding.bottom))
+        collectionView.frame = self.bounds
+        
     }
     
     func setup() {
@@ -342,10 +346,10 @@ extension TagView {
         Cập nhật lại tag view.
      */
     func reloadData(){
-        self.collectionView.reloadData()
         self.superview?.setNeedsLayout()
         self.superview?.layoutIfNeeded()
         self.invalidateIntrinsicContentSize()
+        self.collectionView.reloadData()
         resize()
     }
     /**
@@ -439,11 +443,12 @@ extension TagView: UICollectionViewDelegate, UICollectionViewDataSource {
         if let cell = cell as? TagCollectionViewCell {
             let isSelected = self.indexSeleted.contains(indexPath.item)
             cell._isSelected = isSelected
-            cell.padding = self.tagPadding
             cell.wordLabel.text = tag.text
             if let delegate = self.delegate {
                 cell.wordLabel.numberOfLines = self.tagNumberOfLines
                 cell.wordLabel.attributedText = delegate.tagView(self, textAttribute: indexPath, data: tag, isSelected: isSelected)
+                cell.padding = delegate.tagView(self, padding: indexPath, data: tag, isSelected: isSelected)
+                
                 if let leftView = delegate.tagView(self, leftView: indexPath, data: tag, isSelected: isSelected) {
                     let size = delegate.tagView(self, leftViewSize: indexPath, data: tag, isSelected: isSelected)
                     leftView.frame.size = size
@@ -490,22 +495,26 @@ extension TagView: UICollectionViewDelegate, UICollectionViewDataSource {
 extension TagView: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
         let tag: TagModel = self.tags[indexPath.item]
         let isSelected = self.indexSeleted.contains(indexPath.item)
         
+        let font = self.delegate?.tagView(self, font: indexPath, data: tag, isSelected: isSelected) ?? .systemFont(ofSize: 14)
+        var maxHeight : CGFloat = 1000
+        if self.tagNumberOfLines > -1 {
+            maxHeight = font.lineHeight * CGFloat(tagNumberOfLines) + (font.lineHeight - font.pointSize) * CGFloat(tagNumberOfLines - 1)
+        }
+        
         let leftViewSize = self.delegate?.tagView(self, leftViewSize: indexPath, data: tag, isSelected: isSelected) ?? .zero
         let rightViewSize = self.delegate?.tagView(self, rightViewSize: indexPath, data: tag, isSelected: isSelected) ?? .zero
+        let tagPadding = self.delegate?.tagView(self, padding: indexPath, data: tag, isSelected: isSelected) ?? .zero
         
-        let maxWidth = self.tagMaxSize.width - self.containerPadding.left - self.containerPadding.right - self.tagPadding.left - self.tagPadding.right
+        let maxWidth = self.collectionView.bounds.width - leftViewSize.width - rightViewSize.width - tagPadding.left - tagPadding.right - self.containerPadding.left - self.containerPadding.right
         
+        let wordSize : CGSize = NSAttributedString(string: tag.text, attributes: [.font : font]).StringSize(considering: maxWidth)
         
-        let wordSize : CGSize = delegate?.tagView(self, textAttribute: indexPath, data: tag, isSelected: isSelected).StringSize(considering: maxWidth - rightViewSize.width - leftViewSize.width) ?? NSAttributedString(string: tag.text, attributes: [.font : self.delegate?.tagView(self, font: indexPath, data: tag, isSelected: isSelected) ?? .systemFont(ofSize: 14)]).StringSize(considering: maxWidth)
-        
-        var calculatedHeight = CGFloat()
-        var calculatedWidth = CGFloat()
-        
-        calculatedHeight =  min(self.tagPadding.top + max(wordSize.height, leftViewSize.height, rightViewSize.height) + self.tagPadding.bottom, self.tagMaxSize.height)
-        calculatedWidth = min(self.tagPadding.left + wordSize.width + leftViewSize.width + rightViewSize.width + self.tagPadding.right, maxWidth)
+        let calculatedHeight =  tagPadding.top + max(min(wordSize.height, maxHeight), leftViewSize.height, rightViewSize.height) + tagPadding.bottom
+        let calculatedWidth = min(tagPadding.left + tagPadding.right + wordSize.width + leftViewSize.width + rightViewSize.width, self.collectionView.frame.width)
         
         return CGSize(width: calculatedWidth, height: calculatedHeight)
     }

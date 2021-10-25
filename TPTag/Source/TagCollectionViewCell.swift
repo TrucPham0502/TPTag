@@ -37,7 +37,7 @@ class TagCollectionViewCell: UICollectionViewCell {
         lbl.lineBreakMode = .byTruncatingTail
         lbl.numberOfLines = 1
         lbl.textColor = UIColor.black
-        lbl.textAlignment = .center
+        lbl.textAlignment = .left
         lbl.font = .systemFont(ofSize: 14)
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
